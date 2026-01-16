@@ -24,6 +24,10 @@ public abstract class Component {
 
     }
 
+    public void editorUpdate(float dt) {
+
+    }
+
     public void imgui() {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
@@ -84,6 +88,10 @@ public abstract class Component {
         if (this.uId == -1) {
             this.uId = ID_COUNTER++;
         }
+    }
+
+    public void destroy() {
+
     }
 
     public int getuId() {

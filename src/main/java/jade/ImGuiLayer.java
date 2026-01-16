@@ -1,6 +1,7 @@
 package jade;
 
 import editor.GameViewWindow;
+import editor.MenuBar;
 import editor.PropertiesWindow;
 import imgui.ImFontAtlas;
 import imgui.ImGuiIO;
@@ -20,11 +21,13 @@ public class ImGuiLayer {
     private long glfwWindow;
     private GameViewWindow gameViewWindow;
     private PropertiesWindow propertiesWindow;
+    private MenuBar menuBar;
 
     public ImGuiLayer(long windowPtr, PickingTexture pickingTexture) {
         this.glfwWindow = windowPtr;
         this.gameViewWindow = new GameViewWindow();
         this.propertiesWindow = new PropertiesWindow(pickingTexture);
+        this.menuBar = new MenuBar();
     }
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
@@ -72,10 +75,8 @@ public class ImGuiLayer {
 
         propertiesWindow.update(dt, currentScene);
         propertiesWindow.imgui();
-
-        ImGui.end(); // Cierra el DockSpace
-
-        // 1. Finaliza el cálculo de datos de ImGui
+        menuBar.imgui();
+        ImGui.end();
         ImGui.render();
 
         // 2. Dibuja ImGui en tu ventana principal

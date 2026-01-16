@@ -7,35 +7,32 @@ import jade.*;
 import org.joml.Vector2f;
 import util.AssetPool;
 
-public class LevelEditorScene extends Scene {
+public class LevelEditorSceneInitializer extends SceneInitializer {
 
-    private GameObject obj1;
     private Spritesheet sprites;
-    SpriteRenderer obj1Sprite;
-
-    GameObject levelEditorStuff = this.createGameObject("LevelEditor");
+    private GameObject levelEditorStuff;
 
 
-    public LevelEditorScene() {
+    public LevelEditorSceneInitializer() {
 
     }
 
     @Override
-    public void init() {
-        loadResources();
+    public void init(Scene scene) {
         sprites = AssetPool.getSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png");
         Spritesheet gizmos = AssetPool.getSpritesheet("assets/images/gizmos.png");
 
-        this.camera = new Camera(new Vector2f(-250, 0));
+        levelEditorStuff = scene.createGameObject("LevelEditor");
+        levelEditorStuff.setNoSerialize();
         levelEditorStuff.addComponent(new MouseControls());
         levelEditorStuff.addComponent(new GridLines());
-        levelEditorStuff.addComponent(new EditorCamera(this.camera));
+        levelEditorStuff.addComponent(new EditorCamera(scene.camera()));
         levelEditorStuff.addComponent(new GizmoSystem(gizmos));
-
-        levelEditorStuff.start();
+        scene.addGameObjectToScene(levelEditorStuff);
         }
 
-    private void loadResources() {
+    @Override
+    public void loadResources(Scene scene) {
         AssetPool.getShader("assets/shaders/default.glsl");
 
         AssetPool.addSpritesheet("assets/images/spritesheets/decorationsAndBlocks.png",
@@ -46,7 +43,7 @@ public class LevelEditorScene extends Scene {
                         24, 48, 3, 0));
         AssetPool.getTexture("assets/images/blendImage2.png");
 
-        for (GameObject obj : gameObjects) {
+        for (GameObject obj : scene.getGameObjects()) {
             if (obj.getComponent(SpriteRenderer.class) != null) {
                 SpriteRenderer spr = obj.getComponent(SpriteRenderer.class);
                 if (spr.getTexture() != null) {
@@ -55,25 +52,6 @@ public class LevelEditorScene extends Scene {
                 }
             }
         }
-    }
-
-    float x = 267.0f;
-    float y = 267.0f;
-    @Override
-    public void update(float dt) {
-        levelEditorStuff.update(dt);
-        this.camera.adjustProjection();
-
-        for (GameObject go : this.gameObjects) {
-            go.update(dt);
-        }
-
-
-    }
-
-    @Override
-    public void render() {
-        this.renderer.render();
     }
 
     @Override

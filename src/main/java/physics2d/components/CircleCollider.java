@@ -1,6 +1,6 @@
-package components;
+package physics2d.components;
 
-public class CircleCollider extends Component {
+public class CircleCollider extends Collider {
     private float radius = 1f;
 
     public float getRadius() {
